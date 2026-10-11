@@ -1,11 +1,41 @@
 [
   {
-    "name": "example",
-    "title": "TODO(author): the first document this industry must produce",
-    "for_each": "select gen_random_uuid() as id, 'Example' as name",
+    "name": "panel-brief",
+    "title": "Internal panel brief",
+    "for_each": "select id,name from awards.seasons",
     "file": "name",
     "sections": [
-      { "title": "Details", "sql": "select 'replace me' as item, $1::text as record_id" }
+      {
+        "title": "Internal panel brief",
+        "note": "Confidential. Internal working record. No result is published by this system.",
+        "sql": "select entry,judge,declaration,due_on,criteria_required,criteria_scored,weighted_score from awards.judging_progress where season_id=$1 order by entry,judge"
+      }
+    ]
+  },
+  {
+    "name": "decision-record",
+    "title": "Internal decision record",
+    "for_each": "select id,name from awards.seasons",
+    "file": "name",
+    "sections": [
+      {
+        "title": "Internal decision record",
+        "note": "Confidential. Internal working record. No result is published by this system.",
+        "sql": "select name,entrant,decision,decision_reason from awards.entries where season_id=$1 order by name"
+      }
+    ]
+  },
+  {
+    "name": "judging-ledger",
+    "title": "Judging score ledger",
+    "for_each": "select id,name from awards.seasons",
+    "file": "name",
+    "sections": [
+      {
+        "title": "Judging score ledger",
+        "note": "Confidential. Internal working record. No result is published by this system.",
+        "sql": "select p.entry,p.judge,p.declaration,c.name as criterion,c.weight,s.value,s.rationale from awards.scores s join awards.criteria c on c.id=s.criterion_id join awards.judging_progress p on p.id=s.assignment_id where p.season_id=$1 order by p.entry,p.judge,c.name"
+      }
     ]
   }
 ]

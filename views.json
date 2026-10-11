@@ -1,13 +1,25 @@
 [
   {
     "name": "week",
-    "title": "This week",
-    "subtitle": "Awards for Claude Code: what needs attention, rendered by npm run view",
+    "title": "Awards meeting",
     "sections": [
       {
-        "title": "Needs attention",
-        "note": "TODO(author): point this at the industry's attention view (overdue, stuck, quiet).",
-        "sql": "select 'replace me' as item, 'TODO(author)' as why"
+        "title": "Attention",
+        "sql": "select kind,item,next_step from awards.attention order by kind,item"
+      },
+      {
+        "title": "Judging",
+        "sql": "select entry,category,completed,required_judges,mean_score,ready from awards.results order by category,entry"
+      }
+    ]
+  },
+  {
+    "name": "privacy",
+    "title": "Privacy review",
+    "sections": [
+      {
+        "title": "Evidence reminders",
+        "sql": "select rule,item,action from awards.compliance order by rule,item"
       }
     ]
   }
