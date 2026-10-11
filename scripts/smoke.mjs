@@ -24,7 +24,7 @@ try{
  assert((await call('attention')).some(r=>r.kind==='overdue judging'));
  assert((await call('compliance')).some(r=>r.rule==='retention review'));
  assert.equal((await call('help')).length,commands.length);
- assert.match(display(results),/Harbour Food Hub/);assert.equal((await call('weekly-review')).results.length,3);
+ assert.match(display(results),/Harbour Food Hub/);assert.match(display(results).split("\n")[1],/^\s*-{2,}(\s+-{2,})*\s*$/,"Landing page needs aligned dash-separated columns");assert.equal((await call('weekly-review')).results.length,3);
  const common=[season,'--entry=River Library',actor];
  await fail(['decide',...common,'--state=winner','--reason=Missing scores'],/incomplete/);
  await fail(['assign',season,'--entry=Coastal Repair Circle','--judge=Moana Ellis','--due=2027-01-01',actor],/eligible/);

@@ -4,6 +4,7 @@ import {createHash} from 'node:crypto';
 import {pathToFileURL} from 'node:url';
 import {getDb,REPO_ROOT} from './lib/db.mjs';
 import {parseCsv,pick} from './lib/csv.mjs';
+import {table as textTable} from './lib/format.mjs';
 export const reads={
  seasons:'select id,code,name,closes_on,judging_due,owner from awards.seasons order by closes_on',
  categories:'select id,season_id,name,required_judges from awards.categories order by name',
@@ -105,5 +106,5 @@ async function importEntries(db,s,f){
  }
  return {inserted,skipped,dry_run:Boolean(f['dry-run']),scope:'entry records only; judging and attachments require reconciliation'};
 }
-export function display(value){if(Array.isArray(value)){if(!value.length)return '(none)';const keys=Object.keys(value[0]),cell=v=>String(v??'').replaceAll('|','/').replaceAll('\n',' ');return [keys.join(' | '),keys.map(()=> '---').join(' | '),...value.map(r=>keys.map(k=>cell(r[k])).join(' | '))].join('\n');}return JSON.stringify(value,null,2);}
+export function display(value){if(Array.isArray(value)){if(!value.length)return '(none)';return textTable(value,Object.keys(value[0]).map(key=>({key,label:key.replaceAll('_',' '),width:80,format:v=>typeof v==='boolean'?(v?'yes':'no'):String(v??'').replaceAll('\n',' ')})));}return JSON.stringify(value,null,2);}
 if(process.argv[1]&&import.meta.url===pathToFileURL(path.resolve(process.argv[1])).href){let db;try{db=await getDb();const result=await run(db,process.argv.slice(2));console.log(process.argv.includes('--json')?JSON.stringify(result,null,2):display(result));}catch(e){console.error(e.message);process.exitCode=1;}finally{if(db)await db.close();}}
